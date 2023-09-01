@@ -1,0 +1,75 @@
+use("login_react");
+db.counters.insertOne({
+    counter: "usersId", sequence_value: 0
+});
+
+db.createCollection("users", {
+    capped: false,
+    validator: {
+        $jsonSchema:{
+            bsonType: "object",
+            additionalProperties: false,
+            required: ['id', 'user_name', 'password', 'rol'],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                id: {
+                    bsonType: "number"
+                },
+                user_name: {
+                    bsonType: "string"
+                },
+                password: {
+                    bsonType: "string"
+                },
+                permisos: {
+                    bsonType: "object",
+                    description: "Ingrese los permisos",
+                    properties: {
+                        "/api": {
+                            bsonType: "array",
+                            items: {
+                                bsonType: "string"
+                            }
+                        }
+                    }
+                },
+                rol: {
+                    bsonType: "string"
+                }
+            }
+        }
+    }
+});
+
+
+function siguienteId(coleccion){
+    const sequenceDocument = db.counters.findOneAndUpdate(
+        {counter: `${coleccion}Id`},
+        { $inc: {sequence_value: 1}},
+        { returnDocument: "after" }
+    );
+    return sequenceDocument.sequence_value;
+}
+use("login_react");
+db.users.insertMany([
+    {
+        id: siguienteId("users"),
+        user_name: "pepito",
+        password: "key",
+        rol: "usuario",
+        permisos: {
+            "/api": ["1.0.0", "GET"]
+        }
+    },
+    {
+        id: siguienteId("users"),
+        user_name: "admin",
+        password: "admin",
+        rol: "admin",
+        permisos: {
+            "/api": ["1.0.0", "GET", "POST", "PUT", "DELETE"]
+        }
+    }
+])
