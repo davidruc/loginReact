@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-dotenv.config("../");
+dotenv.config("../../");
 console.log(process.env.MY_SERVER);
 const server  = JSON.parse(process.env.MY_SERVER)
 const config = {
