@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { connect } from "../db/connection.js";
 import { ObjectId } from "mongodb";
 import config from "../utils/config.js";
-
+ 
 const conexionDB = await connect(); 
 export const crearToken = async(req, res, next)=>{
     if (Object.keys(req.body).length === 0) return res.status(400).send({mesaage: "Datos no enviados"});
