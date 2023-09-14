@@ -16,7 +16,8 @@ export const crearToken = async(req, res, next)=>{
         .setIssuedAt()
         .setExpirationTime('3h')
         .sign(encoder.encode(config.key));
-    req.data = {status: 200, message: jwtConstructor};
+    console.log(result);
+    req.data = {status: 200, message: jwtConstructor, usuario: result.nombre };
     next(); 
 } 
 
@@ -36,6 +37,7 @@ export const validarToken = async (req, token) => {
         const error = {message: "no tienes acceso a este método"}
         if(!res.permisos[req.baseUrl].includes(req.method)) return error; 
         let {_id, permisos, ...session} = res;
+        console.log(session);
         return session;
     } catch (error) { 
         return false;

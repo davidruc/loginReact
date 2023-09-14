@@ -58,6 +58,7 @@ db.users.insertMany([
         id: siguienteId("users"),
         user_name: "pepito",
         password: "key",
+        nombre: "Andrés",
         rol: "usuario",
         permisos: {
             "/api": ["1.0.0", "GET"]
@@ -67,6 +68,7 @@ db.users.insertMany([
         id: siguienteId("users"),
         user_name: "admin",
         password: "admin",
+        nombre: "Camilo",
         rol: "admin",
         permisos: {
             "/api": ["1.0.0", "GET", "POST", "PUT", "DELETE"]
