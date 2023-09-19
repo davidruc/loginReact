@@ -3,9 +3,8 @@ import { connect } from "../db/connection.js";
 import { ObjectId } from "mongodb";
 import config from "../utils/config.js";
  
-const conexionDB = await connect(); 
 export const crearToken = async(req, res, next)=>{
-    if (Object.keys(req.body).length === 0) return res.status(400).send({mesaage: "Datos no enviados"});
+    const  conexionDB = await connect(); 
     const result = await conexionDB.collection('users').findOne(req.body);
     if (JSON.stringify(Object.keys(req.body)) !== JSON.stringify(['user_name', 'password'])) return res.status(417).send({message: "el valor que debes suministrar para el inicio de la sesión debe ser el user_name y la clave."})
     if (!result) return res.status(401).send({mesaage: "session no encontrada"});
@@ -16,13 +15,13 @@ export const crearToken = async(req, res, next)=>{
         .setIssuedAt()
         .setExpirationTime('3h')
         .sign(encoder.encode(config.key));
-    console.log(result);
     req.data = {status: 200, message: jwtConstructor, usuario: result.nombre };
     next(); 
 } 
 
 export const validarToken = async (req, token) => {
     try {
+        const  conexionDB = await connect(); 
         const encoder = new TextEncoder();
         const jwtData = await jwtVerify(
             token,
@@ -37,7 +36,6 @@ export const validarToken = async (req, token) => {
         const error = {message: "no tienes acceso a este método"}
         if(!res.permisos[req.baseUrl].includes(req.method)) return error; 
         let {_id, permisos, ...session} = res;
-        console.log(session);
         return session;
     } catch (error) { 
         return false;
