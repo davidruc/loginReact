@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
-
 export default function Formulary() {
     const navigate = useNavigate();
 
@@ -14,6 +13,9 @@ export default function Formulary() {
 
     const home = ()=>{
         navigate("/login/home")
+    }
+    const back = ()=>{
+        navigate("/notFound")
     }
 
     const handleUsername = (e) =>{
@@ -31,7 +33,7 @@ export default function Formulary() {
     }
     
     async function gettoken () {
-        const res = await fetch("http://127.10.10.11:5005/login", {
+        const res = await fetch(`http://${import.meta.env.VITE_HOSTNAME}:${import.meta.env.VITE_PORT_BACKEND}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -50,7 +52,7 @@ export default function Formulary() {
             home();
             setShowFormulary(false);
         }else {
-            console.log("alert");
+            back();
         }
     }
     return (
